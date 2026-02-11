@@ -34,7 +34,7 @@ function SpecViewer({ specUrl, onFileUpload, analyzing }) {
             {specUrl ? (
                 <div className="spec-viewer-content" style={{ position: 'relative' }}>
                     <embed
-                        src={specUrl}
+                        src={`${specUrl}#view=FitH`}
                         type="application/pdf"
                         style={{ width: '100%', height: '100%' }}
                     />
