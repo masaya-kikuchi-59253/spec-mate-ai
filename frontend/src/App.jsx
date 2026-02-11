@@ -95,8 +95,8 @@ function App() {
       ...prev,
       [itemId]: {
         ...prev[itemId],
-        ...updates,
-        humanReviewed: true,
+        humanReviewed: true, // Default to reviewed on any update
+        ...updates, // Allow overriding (e.g. toggling back to false)
       }
     }));
   }, []);

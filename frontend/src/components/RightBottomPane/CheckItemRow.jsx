@@ -26,18 +26,42 @@ function CheckItemRow({ item, result, onUpdate }) {
                     {item.category}
                 </div>
                 <div className="check-item-name">{item.item}</div>
+                <div style={{ textAlign: 'center', fontSize: '11px', color: 'var(--text-secondary)' }}>
+                    {result.finalJudgment !== 'ng' && result.page ? `p.${result.page}` : '-'}
+                </div>
                 <div style={{ textAlign: 'center' }}>
                     <span className={`judgment-badge judgment-${result.aiJudgment}`}>
                         {result.aiJudgment === 'ok' ? '○' : '×'}
                     </span>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                    <span className={`judgment-badge judgment-${result.finalJudgment}`}>
+                    <span
+                        className={`judgment-badge judgment-${result.finalJudgment}`}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            const newJudgment = result.finalJudgment === 'ok' ? 'ng' : 'ok';
+                            onUpdate({
+                                finalJudgment: newJudgment,
+                                manualInput: true,
+                                selectedProposalIndex: -1
+                            });
+                        }}
+                        style={{ cursor: 'pointer' }}
+                        title="クリックして判定を変更"
+                    >
                         {result.finalJudgment === 'ok' ? '○' : '×'}
                     </span>
                 </div>
                 <div className="human-status">
-                    <span className={`human-badge ${result.humanReviewed ? 'reviewed' : 'pending'}`}>
+                    <span
+                        className={`human-badge ${result.humanReviewed ? 'reviewed' : 'pending'}`}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onUpdate({ humanReviewed: !result.humanReviewed });
+                        }}
+                        style={{ cursor: 'pointer' }}
+                        title="クリックして状態を切り替え"
+                    >
                         {result.humanReviewed ? '✓' : '—'}
                     </span>
                 </div>

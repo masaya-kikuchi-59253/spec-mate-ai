@@ -49,7 +49,7 @@ router.post('/export', async (req, res) => {
         { header: '最終判定', key: 'finalJudgment', width: 10 },
         { header: '該当ページ', key: 'page', width: 12 },
         { header: '抜粋', key: 'excerpt', width: 60 },
-        { header: '介入状態', key: 'humanReviewed', width: 12 },
+        { header: '状態', key: 'humanReviewed', width: 12 },
         { header: '備考', key: 'note', width: 30 },
     ];
 

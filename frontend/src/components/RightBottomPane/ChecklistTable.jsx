@@ -23,6 +23,7 @@ function ChecklistTable({ checkItems, checkResults, onUpdateResult, analyzing })
                 <div>No.</div>
                 <div>カテゴリ</div>
                 <div>チェック項目</div>
+                <div style={{ textAlign: 'center' }}>引用頁</div>
                 <div style={{ textAlign: 'center' }}>AI判定</div>
                 <div style={{ textAlign: 'center' }}>最終判定</div>
                 <div style={{ textAlign: 'center' }}>状態</div>
