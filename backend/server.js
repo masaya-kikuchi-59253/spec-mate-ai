@@ -7,9 +7,9 @@ const exportRouter = require('./routes/export');
 const app = express();
 const PORT = 3001;
 
-// CORS configuration
+// CORS configuration - allow all origins in development
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: true,
   credentials: true
 }));
 app.use(express.json());
@@ -28,6 +28,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
 app.use('/api', checkItemsRouter);
 app.use('/api', exportRouter);
 
-app.listen(PORT, () => {
-  console.log(`SpecMate AI Backend running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`SpecMate AI Backend running on http://0.0.0.0:${PORT}`);
+  console.log(`Access from network: http://<server-ip>:${PORT}`);
 });

@@ -46,10 +46,15 @@ router.post('/upload', upload.single('file'), (req, res) => {
 
     // Simulate AI analysis delay
     setTimeout(() => {
+        // Dynamic URL construction based on request
+        const protocol = req.protocol;
+        const host = req.get('host');
+        const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+        
         res.json({
             filename: req.file.filename,
             originalname: req.file.originalname,
-            url: `http://localhost:3001/uploads/${req.file.filename}`,
+            url: fileUrl,
             // Mock component summary (in real app, this would be from AI analysis)
             componentSummary: {
                 partName: 'セラミックコンデンサ',

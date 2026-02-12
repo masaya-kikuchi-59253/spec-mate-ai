@@ -5,7 +5,11 @@ import ChecklistTable from './components/RightBottomPane/ChecklistTable';
 import ExportBar from './components/RightBottomPane/ExportBar';
 import './App.css';
 
-const API_BASE = 'http://localhost:3001/api';
+// Dynamic API base URL - uses current hostname or falls back to localhost
+const API_BASE = import.meta.env.VITE_API_BASE || 
+  (window.location.hostname === 'localhost' 
+    ? 'http://localhost:3001/api'
+    : `http://${window.location.hostname}:3001/api`);
 
 function App() {
   const [specFile, setSpecFile] = useState(null);
