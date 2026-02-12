@@ -29,17 +29,24 @@ function App() {
     return items;
   }, []);
 
-  // Upload file (Mock)
+  // Upload file
   const handleFileUpload = useCallback(async (file) => {
     setSpecFile(file);
 
-    // Mock upload - just trigger endpoint to get metadata
-    const res = await fetch(`${API_BASE}/upload`, { method: 'POST' });
+    // Create FormData and upload file to backend
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const res = await fetch(`${API_BASE}/upload`, {
+      method: 'POST',
+      body: formData,
+    });
     const data = await res.json();
 
-    // Create local preview URL
-    const localUrl = URL.createObjectURL(file);
-    setSpecUrl(localUrl);
+    // Use the URL returned from backend (for server-side PDF serving)
+    // Falls back to blob URL if server doesn't provide one
+    const fileUrl = data.url || URL.createObjectURL(file);
+    setSpecUrl(fileUrl);
 
     setComponentSummary(data.componentSummary);
 

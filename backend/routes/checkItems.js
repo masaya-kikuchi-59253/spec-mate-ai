@@ -1,25 +1,56 @@
 const express = require('express');
 const path = require('path');
-// const fs = require('fs'); // Not used in mock mode
-// const multer = require('multer'); // Not used in mock mode
+const fs = require('fs');
+const multer = require('multer');
 const router = express.Router();
 
 const checkItems = require('../data/mockCheckItems.json');
+
+// Multer setup for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadDir = path.join(__dirname, '..', 'uploads');
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + '-' + file.originalname);
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        if (allowedTypes.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error('PDFまたはWord文書のみアップロード可能です'));
+        }
+    }
+});
 
 // GET /api/check-items
 router.get('/check-items', (req, res) => {
     res.json(checkItems);
 });
 
-// POST /api/upload - Mock upload (returns fixed component summary)
-router.post('/upload', (req, res) => {
-    // Simulate upload delay
+// POST /api/upload - Real file upload
+router.post('/upload', upload.single('file'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'ファイルがアップロードされませんでした' });
+    }
+
+    // Simulate AI analysis delay
     setTimeout(() => {
         res.json({
-            filename: 'mock_spec.pdf',
-            originalname: 'mock_spec.pdf',
-            url: '', // Frontend should use local blob URL
-            // Mock component summary
+            filename: req.file.filename,
+            originalname: req.file.originalname,
+            url: `http://localhost:3001/uploads/${req.file.filename}`,
+            // Mock component summary (in real app, this would be from AI analysis)
             componentSummary: {
                 partName: 'セラミックコンデンサ',
                 partNumber: 'GRM188R71C104KA01D',
@@ -32,7 +63,7 @@ router.post('/upload', (req, res) => {
                 status: '量産中',
             }
         });
-    }, 1200); // 1.2s delay for "uploading" effect
+    }, 1200); // 1.2s delay for "AI analysis" effect
 });
 
 // POST /api/analyze - Mock AI analysis
